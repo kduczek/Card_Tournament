@@ -16,4 +16,8 @@ public class Player {
         this.town = town;
         this.voivodeship = voivodeship;
     }
+
+    public String getNameAndSurname() {
+        return name + " " + surname;
+    }
 }

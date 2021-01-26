@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Tournament {
     private static int NUMBER_OF_PLAYERS = 1024;
@@ -76,10 +77,10 @@ public class Tournament {
     }
 
     private void playRound() {
-        System.out.println("DLugosc: " + players.length);
         List<Integer> ladderOne = new ArrayList<>();
         List<Integer> ladderTwo = new ArrayList<>();
         Player[] stageWinners = new Player[NUMBER_OF_PAIRS];
+        AtomicBoolean isFinalGame = new AtomicBoolean(false);
 
         drawPairs(ladderOne, ladderTwo);
 
@@ -87,13 +88,12 @@ public class Tournament {
             int finalI = i;
             Thread thread = new Thread(() -> {
                 Player playerOne = players[ladderOne.get(finalI)];
-                System.out.print(ladderOne.get(finalI) + " ");
                 Player playerTwo = players[ladderTwo.get(finalI)];
-                System.out.println(ladderTwo.get(finalI));
 
                 SingleGame singleGame = new SingleGame(playerOne, playerTwo);
 
-                stageWinners[finalI] =  singleGame.playGame();
+                if(NUMBER_OF_PAIRS == 1) isFinalGame.set(true);
+                stageWinners[finalI] =  singleGame.playGame(isFinalGame.get());
             });
 
             thread.start();
@@ -116,5 +116,13 @@ public class Tournament {
         while(NUMBER_OF_PAIRS >= 1) {
             playRound();
         }
+        printWinner();
     }
+
+    private void printWinner() {
+        if(players.length == 1) {
+            System.out.println(players[0].getNameAndSurname());
+        }
+    }
+
 }

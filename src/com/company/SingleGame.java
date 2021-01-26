@@ -13,7 +13,7 @@ public class SingleGame {
         this.playerTwo = playerTwo;
     }
 
-    public Player playGame() {
+    public Player playGame(boolean isFinal) {
         int[] deck = createDeck();
         int[] orderOfCardDrawing = generateCardNumbers();
 
@@ -33,14 +33,21 @@ public class SingleGame {
         int sumOfPlayerOnePoints = sumPoints(playerOneDeck);
         int sumOfPlayerTwoPoints = sumPoints(playerTwoDeck);
 
-        if(sumOfPlayerOnePoints == sumOfPlayerTwoPoints) {
+        if(isFinal) {
+            printFinalPlayer(playerOne, sumOfPlayerOnePoints, playerOneDeck);
+            printFinalPlayer(playerTwo, sumOfPlayerTwoPoints, playerTwoDeck);
+        }
 
+        if(sumOfPlayerOnePoints == sumOfPlayerTwoPoints) {
+            if(isFinal) {
+                System.out.println("Winner had an Ace of Hearts");
+            }
             if(checkIfDeckHasAce(playerOneDeck) && !checkIfDeckHasAce(playerTwoDeck)) {
                 return playerOne;
             } else if(!checkIfDeckHasAce(playerOneDeck) && checkIfDeckHasAce(playerTwoDeck)) {
                 return playerTwo;
             } else {
-                if(checkIfPlayerOneHasAceOfDirect()) {
+                if(checkIfPlayerOneHasAceOfHearts()) {
                     return playerOne;
                 } else {
                     return playerTwo;
@@ -100,8 +107,34 @@ public class SingleGame {
         return deck.contains(14);
     }
 
-    private boolean checkIfPlayerOneHasAceOfDirect() {
+    private boolean checkIfPlayerOneHasAceOfHearts() {
         Random random = new Random();
         return random.nextBoolean();
+    }
+
+    private void printFinalPlayer(Player player, int sumOfPoints, List<Integer> deck)  {
+        System.out.println(player.getNameAndSurname());
+        System.out.println("Cards in player's deck: ");
+
+        for(int i = 0; i < deck.size(); i++) {
+            switch (deck.get(i)) {
+                case 11 :
+                    System.out.print("Jack, ");
+                    break;
+                case 12:
+                    System.out.print("Queen, ");
+                    break;
+                case 13:
+                    System.out.print("King, ");
+                    break;
+                case 14:
+                    System.out.print("Ace, ");
+                    break;
+                default:
+                    System.out.print(deck.get(i) + ", ");
+            }
+        }
+
+        System.out.println("\nSum of points: " + sumOfPoints + "\n");
     }
 }
