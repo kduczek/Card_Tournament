@@ -28,4 +28,8 @@ public class Player {
     public char getGender() {
         return gender;
     }
+
+    public String getVoivodeship() {
+        return voivodeship;
+    }
 }

@@ -4,13 +4,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Tournament {
     private static int NUMBER_OF_PLAYERS = 1024;
     private static int NUMBER_OF_PAIRS = 512;
     private Player[] players = new Player[NUMBER_OF_PLAYERS];
+    private Map<Player, Integer> statistics = new HashMap<>();
 
     private void registerParticipants() {
         try {
@@ -63,7 +67,6 @@ public class Tournament {
 
     private int generateNumber(int numberOfPlayers) {
         Random random = new Random();
-//        return random.nextInt((numberOfPlayers - 1) + 1) + 1;
         return random.nextInt(numberOfPlayers);
     }
 
@@ -92,6 +95,10 @@ public class Tournament {
 
                 if(NUMBER_OF_PAIRS == 1) isFinalGame.set(true);
                 stageWinners[finalI] =  singleGame.playGame(isFinalGame.get());
+
+                int[] points = singleGame.getPoints();
+                statistics.put(playerOne, points[0]);
+                statistics.put(playerTwo, points[1]);
             });
 
             thread.start();
@@ -118,8 +125,7 @@ public class Tournament {
         }
 
         printWinner();
-
-
+        printStatistics();
     }
 
     private void printWinner() {
@@ -133,8 +139,6 @@ public class Tournament {
     }
 
     private void getFinalistsAndSentLetters(List<Player> finalists) {
-
-
         if(players.length == 4) {
             finalists.addAll(Arrays.asList(players));
         }
@@ -158,6 +162,11 @@ public class Tournament {
             }
             sendCongratulatoryLetters(players[0], 1);
         }
+    }
+
+    private void printStatistics() {
+        Statistics.averagePointsByVoivodeship(statistics);
+        Statistics.medianOfPointsForMenAndWomen(statistics);
     }
 
 }

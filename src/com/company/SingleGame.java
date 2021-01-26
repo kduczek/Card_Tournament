@@ -7,10 +7,12 @@ import java.util.Random;
 public class SingleGame {
     private Player playerOne;
     private Player playerTwo;
+    private int[] points;
 
     public SingleGame(Player playerOne, Player playerTwo) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
+        points = new int[2];
     }
 
     public Player playGame(boolean isFinal) {
@@ -32,6 +34,8 @@ public class SingleGame {
 
         int sumOfPlayerOnePoints = sumPoints(playerOneDeck);
         int sumOfPlayerTwoPoints = sumPoints(playerTwoDeck);
+        points[0] = sumOfPlayerOnePoints;
+        points[1] = sumOfPlayerTwoPoints;
 
         if(isFinal) {
             printFinalPlayer(playerOne, sumOfPlayerOnePoints, playerOneDeck);
@@ -136,5 +140,9 @@ public class SingleGame {
         }
 
         System.out.println("\nSum of points: " + sumOfPoints + "\n");
+    }
+
+    public int[] getPoints() {
+        return points;
     }
 }
