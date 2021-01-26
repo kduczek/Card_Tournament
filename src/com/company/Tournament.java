@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Tournament {
@@ -112,16 +110,53 @@ public class Tournament {
 
     public void startTournament() {
         registerParticipants();
+        List<Player> finalists = new ArrayList<>();
 
         while(NUMBER_OF_PAIRS >= 1) {
             playRound();
+            getFinalistsAndSentLetters(finalists);
         }
+
         printWinner();
+
+
     }
 
     private void printWinner() {
         if(players.length == 1) {
-            System.out.println(players[0].getNameAndSurname());
+            System.out.println("THE WINNER IS: " + players[0].getNameAndSurname());
+        }
+    }
+
+    private void sendCongratulatoryLetters(Player player, int position) {
+        CongratulatoryLetter.printLetter(player, position);
+    }
+
+    private void getFinalistsAndSentLetters(List<Player> finalists) {
+
+
+        if(players.length == 4) {
+            finalists.addAll(Arrays.asList(players));
+        }
+
+        if(players.length == 2) {
+            for(Player finalist : finalists) {
+                if(!players[0].getNameAndSurname().equals(finalist.getNameAndSurname()) && !players[1].getNameAndSurname().equals(finalist.getNameAndSurname())) {
+                    sendCongratulatoryLetters(finalist, 3);
+                }
+            }
+
+            finalists.clear();
+            finalists.addAll(Arrays.asList(players));
+        }
+
+        if(players.length == 1) {
+            for(Player finalist : finalists) {
+                if(!players[0].getNameAndSurname().equals(finalist.getNameAndSurname())) {
+                    sendCongratulatoryLetters(finalist, 2);
+                }
+            }
+            sendCongratulatoryLetters(players[0], 1);
         }
     }
 

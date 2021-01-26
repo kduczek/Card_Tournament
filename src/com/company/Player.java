@@ -20,4 +20,12 @@ public class Player {
     public String getNameAndSurname() {
         return name + " " + surname;
     }
+
+    public String getTown() {
+        return town;
+    }
+
+    public char getGender() {
+        return gender;
+    }
 }
