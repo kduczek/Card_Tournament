@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Tournament implements Runnable {
+public class Tournament {
     private static int NUMBER_OF_PLAYERS = 1024;
+    private static int NUMBER_OF_PAIRS = 512;
     private Player[] players = new Player[NUMBER_OF_PLAYERS];
 
     private void registerParticipants() {
@@ -42,42 +43,78 @@ public class Tournament implements Runnable {
         return new Player(name, surname, age, gender, town, voivodeship);
     }
 
-    private void drawPairs() {
-        int numberOfPairs = NUMBER_OF_PLAYERS / 2;
-        List<Integer> ladderOne = new ArrayList<>();
-        List<Integer> ladderTwo = new ArrayList<>();
+    private void drawPairs(List<Integer> ladderOne, List<Integer> ladderTwo) {
         int number;
 
 
-        do {
-            number = generateNumber(numberOfPairs * 2);
+        while (ladderOne.size() != NUMBER_OF_PAIRS) {
+            number = generateNumber(NUMBER_OF_PLAYERS);
             if (!ladderOne.contains(number)) {
                 ladderOne.add(number);
             }
-        } while (ladderOne.size() != numberOfPairs);
+        }
 
-        do {
-            number = generateNumber(numberOfPairs * 2);
+        while (ladderTwo.size() != NUMBER_OF_PAIRS) {
+            number = generateNumber(NUMBER_OF_PLAYERS);
             if (!ladderOne.contains(number) && !ladderTwo.contains(number)) {
                 ladderTwo.add(number);
             }
-        } while (ladderTwo.size() != numberOfPairs);
-
-        for(int i = 0; i < numberOfPairs; i++) {
-            System.out.println(ladderOne.get(i) + " " + ladderTwo.get(i));
         }
-
     }
 
     private int generateNumber(int numberOfPlayers) {
         Random random = new Random();
-        return random.nextInt((numberOfPlayers - 1) + 1) + 1;
+//        return random.nextInt((numberOfPlayers - 1) + 1) + 1;
+        return random.nextInt(numberOfPlayers);
     }
 
+    private void nextRound() {
+        if(NUMBER_OF_PLAYERS > 1) {
+            NUMBER_OF_PLAYERS /= 2;
+            NUMBER_OF_PAIRS /= 2;
+        }
+    }
 
-    @Override
-    public void run() {
-        //TODO
-        drawPairs();
+    private void playRound() {
+        System.out.println("DLugosc: " + players.length);
+        List<Integer> ladderOne = new ArrayList<>();
+        List<Integer> ladderTwo = new ArrayList<>();
+        Player[] stageWinners = new Player[NUMBER_OF_PAIRS];
+
+        drawPairs(ladderOne, ladderTwo);
+
+        for(int i = 0; i < NUMBER_OF_PAIRS; i++) {
+            int finalI = i;
+            Thread thread = new Thread(() -> {
+                Player playerOne = players[ladderOne.get(finalI)];
+                System.out.print(ladderOne.get(finalI) + " ");
+                Player playerTwo = players[ladderTwo.get(finalI)];
+                System.out.println(ladderTwo.get(finalI));
+
+                SingleGame singleGame = new SingleGame(playerOne, playerTwo);
+
+                stageWinners[finalI] =  singleGame.playGame();
+            });
+
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        players = new Player[NUMBER_OF_PAIRS];
+        if (NUMBER_OF_PAIRS >= 0) System.arraycopy(stageWinners, 0, players, 0, NUMBER_OF_PAIRS);
+
+        nextRound();
+    }
+
+    public void startTournament() {
+        registerParticipants();
+
+        while(NUMBER_OF_PAIRS >= 1) {
+            playRound();
+        }
     }
 }

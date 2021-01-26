@@ -25,7 +25,7 @@ public class SingleGame {
             playerOneDeck.add(deck[orderOfCardDrawing[i]]);
         }
 
-        for(int i = 26; i < 53; i++) {
+        for(int i = 26; i < 52; i++) {
             playerTwoDeck.add(deck[orderOfCardDrawing[i]]);
         }
 
