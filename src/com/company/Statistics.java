@@ -28,6 +28,23 @@ public class Statistics {
         Map<Player, Integer> women = new HashMap<>();
         Map<Player, Integer> men = new HashMap<>();
 
+        divideMapByGender(statistics, women, men);
+
+        Map<Player, Integer> sortedWomen = sortMapByValues(women);
+        Map<Player, Integer> sortedMen = sortMapByValues(men);
+
+        int[] womenScoresInInt = convertMapToIntArray(sortedWomen);
+        int[] menScoresInInt = convertMapToIntArray(sortedMen);
+
+
+        System.out.println("Median for Women: ");
+        System.out.println(calculateMedian(womenScoresInInt));
+
+        System.out.println("Median for Men: ");
+        System.out.println(calculateMedian(menScoresInInt));
+    }
+
+    private static void divideMapByGender(Map<Player, Integer> statistics, Map<Player, Integer> women, Map<Player, Integer> men) {
         for(Map.Entry<Player, Integer> entry : statistics.entrySet()) {
             if(entry.getKey().getGender() == 'K') {
                 women.put(entry.getKey(), entry.getValue());
@@ -35,44 +52,25 @@ public class Statistics {
                 men.put(entry.getKey(), entry.getValue());
             }
         }
+    }
 
-        Map<Player, Integer> sortedWomen =
-                women.entrySet()
-                        .stream()
-                        .sorted(Map.Entry.<Player, Integer>comparingByValue())
-                        .collect(Collectors.toMap(Map.Entry::getKey,
-                                Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+    private static Map<Player, Integer> sortMapByValues(Map<Player, Integer> map) {
+       return map.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Player, Integer>comparingByValue())
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+    }
 
-        Map<Player, Integer> sortedMen =
-                men.entrySet()
-                        .stream()
-                        .sorted(Map.Entry.<Player, Integer>comparingByValue())
-                        .collect(Collectors.toMap(Map.Entry::getKey,
-                                Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+    private static int[] convertMapToIntArray(Map<Player, Integer> map) {
+        Integer[] scores = map.values().toArray(new Integer[0]);
+        return Arrays.stream(scores).mapToInt(Integer::intValue).toArray();
+    }
 
-        Integer[] womenScores = sortedWomen.values().toArray(new Integer[0]);
-        int[] womenScoresInInt = Arrays.stream(womenScores).mapToInt(Integer::intValue).toArray();
-
-        Integer[] menScores = sortedWomen.values().toArray(new Integer[0]);
-        int[] menScoresInInt = Arrays.stream(menScores).mapToInt(Integer::intValue).toArray();
-
-        double womenMedian;
-        double menMedian;
-
-        System.out.println("Median for Women: ");
-        if (womenScores.length % 2 == 0)
-            womenMedian = ((double)womenScores[womenScores.length/2] + (double)womenScores[womenScores.length/2 - 1])/2;
+    private static double calculateMedian(int[] scores) {
+        if (scores.length % 2 == 0)
+            return ((double)scores[scores.length/2] + (double)scores[scores.length/2 - 1])/2;
         else
-            womenMedian = (double) womenScores[womenScores.length/2];
-
-        System.out.println(womenMedian);
-
-        System.out.println("Median for Men: ");
-        if (menScores.length % 2 == 0)
-            menMedian = ((double)menScores[menScores.length/2] + (double)menScores[menScores.length/2 - 1])/2;
-        else
-            menMedian = (double) menScores[menScores.length/2];
-
-        System.out.println(menMedian);
+            return (double) scores[scores.length/2];
     }
 }
