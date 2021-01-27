@@ -12,6 +12,7 @@ public class Tournament {
     private static int NUMBER_OF_PAIRS = 512;
     private Player[] players = new Player[NUMBER_OF_PLAYERS];
     private final Map<Player, Integer> statistics = new HashMap<>();
+    private final Map<Player, Integer> winnerStatistics = new HashMap<>();
 
     private void registerParticipants() {
         try {
@@ -96,6 +97,12 @@ public class Tournament {
                 int[] points = singleGame.getPoints();
                 statistics.put(playerOne, points[0]);
                 statistics.put(playerTwo, points[1]);
+
+                if(stageWinners[finalI].equals(playerOne)) {
+                    winnerStatistics.put(stageWinners[finalI], points[0]);
+                } else {
+                    winnerStatistics.put(stageWinners[finalI], points[1]);
+                }
             });
 
             thread.start();
@@ -127,7 +134,7 @@ public class Tournament {
 
     private void printWinner() {
         if(players.length == 1) {
-            System.out.println("THE WINNER IS: " + players[0].getNameAndSurname());
+            System.out.println("THE WINNER IS: " + players[0].getNameAndSurname() + "\n");
         }
     }
 
@@ -164,6 +171,9 @@ public class Tournament {
     private void printStatistics() {
         Statistics.averagePointsByVoivodeship(statistics);
         Statistics.medianOfPointsForMenAndWomen(statistics);
+        Statistics.minAndMaxScoreForStageOneWinners(winnerStatistics);
+        Statistics.sumOfPointsByAgeGroups(statistics);
     }
+
 
 }

@@ -37,11 +37,32 @@ public class Statistics {
         int[] menScoresInInt = convertMapToIntArray(sortedMen);
 
 
-        System.out.println("Median for Women: ");
+        System.out.println("\nMedian for Women: ");
         System.out.println(calculateMedian(womenScoresInInt));
 
         System.out.println("Median for Men: ");
         System.out.println(calculateMedian(menScoresInInt));
+    }
+
+    public static void minAndMaxScoreForStageOneWinners(Map<Player, Integer> statistics) {
+        Map<Player, Integer> sortedByScore = sortMapByValues(statistics);
+        int minScore = (int) sortedByScore.values().toArray()[0];
+        int maxScore = (int) sortedByScore.values().toArray()[sortedByScore.size() - 1];
+        System.out.println("\nLowest score: " + minScore);
+        System.out.println("Highest score: " + maxScore);
+    }
+
+    public static void sumOfPointsByAgeGroups(Map<Player, Integer> statistics) {
+        Map<String, Double> temp =
+                statistics.entrySet()
+                .stream()
+                .collect(Collectors.groupingBy(e -> e.getKey().getAgeGroup(),
+                        Collectors.summingDouble(Map.Entry::getValue)));
+
+        System.out.println("\nSum of points in different age groups: ");
+        for(Map.Entry<String, Double> entry : temp.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
     }
 
     private static void divideMapByGender(Map<Player, Integer> statistics, Map<Player, Integer> women, Map<Player, Integer> men) {

@@ -36,4 +36,18 @@ public class Player {
     public int getAge() {
         return age;
     }
+
+    public String getAgeGroup() {
+        int age = getAge();
+
+        if(age < 18) {
+            return "0 - 17";
+        } else if(age < 30) {
+            return "18 - 29";
+        } else if(age < 55) {
+            return "30 - 54";
+        } else {
+            return "55 - 99";
+        }
+    }
 }
