@@ -1,12 +1,12 @@
 package com.company;
 
 public class Player {
-    private String name;
-    private String surname;
-    private int age;
-    private char gender;
-    private String town;
-    private String voivodeship;
+    private final String name;
+    private final String surname;
+    private final int age;
+    private final char gender;
+    private final String town;
+    private final String voivodeship;
 
     public Player(String name, String surname, int age, char gender, String town, String voivodeship) {
         this.name = name;
@@ -31,5 +31,9 @@ public class Player {
 
     public String getVoivodeship() {
         return voivodeship;
+    }
+
+    public int getAge() {
+        return age;
     }
 }

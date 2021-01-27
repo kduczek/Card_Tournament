@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Random;
 
 public class SingleGame {
-    private Player playerOne;
-    private Player playerTwo;
-    private int[] points;
+    private final Player playerOne;
+    private final Player playerTwo;
+    private final int[] points;
 
     public SingleGame(Player playerOne, Player playerTwo) {
         this.playerOne = playerOne;
@@ -120,9 +120,9 @@ public class SingleGame {
         System.out.println(player.getNameAndSurname());
         System.out.println("Cards in player's deck: ");
 
-        for(int i = 0; i < deck.size(); i++) {
-            switch (deck.get(i)) {
-                case 11 :
+        for (Integer integer : deck) {
+            switch (integer) {
+                case 11:
                     System.out.print("Jack, ");
                     break;
                 case 12:
@@ -135,7 +135,7 @@ public class SingleGame {
                     System.out.print("Ace, ");
                     break;
                 default:
-                    System.out.print(deck.get(i) + ", ");
+                    System.out.print(integer + ", ");
             }
         }
 

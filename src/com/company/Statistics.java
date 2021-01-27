@@ -57,7 +57,7 @@ public class Statistics {
     private static Map<Player, Integer> sortMapByValues(Map<Player, Integer> map) {
        return map.entrySet()
                 .stream()
-                .sorted(Map.Entry.<Player, Integer>comparingByValue())
+                .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
@@ -71,6 +71,6 @@ public class Statistics {
         if (scores.length % 2 == 0)
             return ((double)scores[scores.length/2] + (double)scores[scores.length/2 - 1])/2;
         else
-            return (double) scores[scores.length/2];
+            return scores[scores.length/2];
     }
 }

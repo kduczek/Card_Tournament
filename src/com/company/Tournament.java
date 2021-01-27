@@ -4,17 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Tournament {
     private static int NUMBER_OF_PLAYERS = 1024;
     private static int NUMBER_OF_PAIRS = 512;
     private Player[] players = new Player[NUMBER_OF_PLAYERS];
-    private Map<Player, Integer> statistics = new HashMap<>();
+    private final Map<Player, Integer> statistics = new HashMap<>();
 
     private void registerParticipants() {
         try {
